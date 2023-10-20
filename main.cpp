@@ -1,11 +1,14 @@
 #include <iostream>
-
-int main(){
-
-      std :: cout << "Start!!" << std :: endl;
-
-      std :: cout << "1 commit" << std :: endl;
+#include "LongInt.h"
 
 
-      return 0;
+int main() {
+
+    std::string numberStr = "12122341234123412341234123412341234123412343123121263712831293719283178230971902308912380128334567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+
+    LongInt longNum(numberStr);
+
+    longNum.printNumber();
+
+    return 0;
 }
