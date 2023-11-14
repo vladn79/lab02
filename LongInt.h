@@ -40,7 +40,6 @@ public:
         return result;
     }
 
-
     LongInt operator-(const LongInt& other) const {
         LongInt result;
         int borrow = 0;
@@ -55,17 +54,45 @@ public:
                 diff += 10;
                 borrow = 1;
             } else {
-            borrow = 0;
+                borrow = 0;
             }
             result.digits.push_back(diff);
-    }
+        }
 
         while (result.digits.size() > 1 && result.digits.back() == 0) {
             result.digits.pop_back();
         }
 
+        return result;
+    }
+    LongInt operator*(const LongInt& other) const {
+    LongInt result("0");
+
+    for (int i = 0; i < digits.size(); ++i) {
+        LongInt partialProduct;
+        int carry = 0;
+
+        for (int j = 0; j < other.digits.size(); ++j) {
+            int product = digits[i] * other.digits[j] + carry;
+            carry = product / 10;
+            partialProduct.digits.push_back(product % 10);
+        }
+
+        while (carry > 0) {
+            partialProduct.digits.push_back(carry % 10);
+            carry /= 10;
+        }
+        
+        for (int k = 0; k < i; ++k) {
+            partialProduct.digits.insert(partialProduct.digits.begin(), 0);
+        }
+
+        result = result + partialProduct;
+    }
+
     return result;
 }
+
 
     friend std::ostream& operator<<(std::ostream& os, const LongInt& num) {
         for (auto it = num.digits.rbegin(); it != num.digits.rend(); it++) {
