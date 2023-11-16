@@ -1,22 +1,18 @@
 #include <iostream>
 #include "LongInt.h"
-//#include "Karatsuba.h"
+#include "LongInt.cpp"
+using namespace std;
+
 int main() {
-      std::string num1 = "11";
-      std::string num2 = "3";
-
-      LongInt longNum1(num1);
-      LongInt longNum2(num2);
-
-      LongInt sum = longNum1 + longNum2;
-      LongInt diff = longNum1 - longNum2;
-      LongInt pr = longNum1 * longNum2;
-
-
-      std::cout << "Sum: " << sum << std::endl;
-      std::cout << "Diff: " << diff << std::endl;
-      std::cout << "prod: " << pr << std::endl;
-
+    LongInt x, y;
+    cin >> x;
+    cin >> y;
+    cout <<"x = "<< x << endl;
+    cout <<"y = "<< y << endl;
+    cout <<"x + y = "<< x + y;
+    cout <<"x - y = "<< x - y;
+    bool ex = (x + y) != x;
+    cout << ex;
 
     return 0;
 }
