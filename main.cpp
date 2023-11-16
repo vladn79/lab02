@@ -12,7 +12,8 @@ int main() {
     cout <<"x + y = "<< x + y;
     cout <<"x - y = "<< x - y;
     bool ex = (x + y) != x;
-    cout << ex;
+    cout << ex << endl;
+    cout<< "x * y = " << x * y;  
 
     return 0;
 }
