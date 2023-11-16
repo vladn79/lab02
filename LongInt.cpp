@@ -89,6 +89,34 @@ LongInt LongInt::operator+(const LongInt& other) {
         return result;
     }
 
+LongInt LongInt::operator*(const LongInt& other) const {
+    LongInt result("0");
+
+    for (int i = 0; i < digits.size(); ++i) {
+        LongInt partialProduct;
+        int carry = 0;
+
+        for (int j = 0; j < other.digits.size(); ++j) {
+            int product = digits[i] * other.digits[j] + carry;
+            carry = product / 10;
+            partialProduct.digits.push_back(product % 10);
+        }
+
+        while (carry > 0) {
+            partialProduct.digits.push_back(carry % 10);
+            carry /= 10;
+        }
+        
+        for (int k = 0; k < i; ++k) {
+            partialProduct.digits.insert(partialProduct.digits.begin(), 0);
+        }
+
+        result = result + partialProduct;
+    }
+
+    return result;
+}
+
 std::ostream& operator<<(std::ostream& out, LongInt num) {
     for (int i = int(num.digits.size()) - 1; i >= 0; --i) {
         out << num.digits[i];
