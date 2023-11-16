@@ -7,13 +7,8 @@ int main() {
     LongInt x, y;
     cin >> x;
     cin >> y;
-    cout <<"x = "<< x << endl;
-    cout <<"y = "<< y << endl;
-    cout <<"x + y = "<< x + y;
-    cout <<"x - y = "<< x - y;
-    bool ex = (x + y) != x;
-    cout << ex << endl;
-    cout<< "x * y = " << x * y;  
+    LongInt z;
+    cout << z.karatsubaMultiply(x, y);  
 
     return 0;
 }

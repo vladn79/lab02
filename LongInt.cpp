@@ -1,4 +1,3 @@
-// LongInt.cpp
 #include "LongInt.h"
 #include <algorithm>
 
@@ -116,7 +115,46 @@ LongInt LongInt::operator*(const LongInt& other) const {
 
     return result;
 }
+LongInt LongInt::karatsubaMultiply(const LongInt& x, const LongInt& y) const {
 
+    if (x.digits.size() <= 1 || y.digits.size() <= 1) {
+        return x * y;
+    }
+
+   
+    size_t n = std::max(x.digits.size(), y.digits.size());
+    size_t m = (n + 1) / 2;
+
+    LongInt xLow, xHigh, yLow, yHigh;
+
+    for (size_t i = 0; i < m; ++i) {
+        xLow.digits.push_back(i < x.digits.size() ? x.digits[i] : 0);
+        xHigh.digits.push_back(i + m < x.digits.size() ? x.digits[i + m] : 0);
+
+        yLow.digits.push_back(i < y.digits.size() ? y.digits[i] : 0);
+        yHigh.digits.push_back(i + m < y.digits.size() ? y.digits[i + m] : 0);
+    }
+
+
+    LongInt z0 = karatsubaMultiply(xLow, yLow);
+    LongInt z1 = karatsubaMultiply(xHigh, yHigh);
+    LongInt z2 = karatsubaMultiply(xLow + xHigh, yLow + yHigh) - z0 - z1;
+
+  
+    for (size_t i = 0; i < 2 * m; ++i) {
+        z0.digits.push_back(0);
+    }
+
+    for (size_t i = 0; i < m; ++i) {
+        z2.digits.push_back(0);
+    }
+
+    return z0 + z1 + z2;
+}
+
+LongInt LongInt::karatsubaMultiply(const LongInt& other) const {
+    return karatsubaMultiply(*this, other);
+}
 std::ostream& operator<<(std::ostream& out, LongInt num) {
     for (int i = int(num.digits.size()) - 1; i >= 0; --i) {
         out << num.digits[i];
