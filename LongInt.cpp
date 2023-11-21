@@ -164,3 +164,40 @@ LongInt LongInt::karatsuba_multiply(const LongInt& num1, const LongInt& num2) co
     return result;
 }
 
+LongInt LongInt::toom_cook_multiply(const LongInt& num1, const LongInt& num2) const {
+    size_t n = std::max(num1.digits.size(), num2.digits.size());
+    if (n <= 3) {
+        return num1 * num2;
+    }
+    size_t m = n / 3;
+    LongInt low1, mid1, high1, low2, mid2, high2;
+
+    low1.digits.assign(num1.digits.begin(), num1.digits.begin() + m);
+    mid1.digits.assign(num1.digits.begin() + m, num1.digits.begin() + 2 * m);
+    high1.digits.assign(num1.digits.begin() + 2 * m, num1.digits.end());
+
+    low2.digits.assign(num2.digits.begin(), num2.digits.begin() + m);
+    mid2.digits.assign(num2.digits.begin() + m, num2.digits.begin() + 2 * m);
+    high2.digits.assign(num2.digits.begin() + 2 * m, num2.digits.end());
+
+    LongInt z0 = toom_cook_multiply(low1, low2);
+    LongInt z4 = toom_cook_multiply(high1, high2);
+
+    LongInt low1_plus_mid1 = low1 + mid1;
+    LongInt low2_plus_mid2 = low2 + mid2;
+
+    LongInt z2 = toom_cook_multiply(low1_plus_mid1, low2_plus_mid2);
+    LongInt z3 = toom_cook_multiply(mid1 + high1, mid2 + high2);
+
+    LongInt mid_term = z2 + z3 - z0 - z4;
+    LongInt z1 = mid_term.left_shift(m);
+    
+    LongInt result = z0 + z1 + z2.left_shift(2 * m) + z3.left_shift(3 * m) + z4.left_shift(4 * m);
+
+    return result;
+} 
+
+
+
+
+
