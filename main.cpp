@@ -4,11 +4,10 @@
 using namespace std;
 
 int main() {
-    LongInt x, y;
-    cin >> x;
-    cin >> y;
-    LongInt z;
-    cout << z.karatsubaMultiply(x, y);  
+LongInt num1("123456789");
+LongInt num2("987654321");
 
-    return 0;
+LongInt result;
+std::cout << "Result: " << result.karatsuba_multiply(num1, num2) << std::endl;
+
 }
