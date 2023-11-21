@@ -131,6 +131,42 @@ std::istream& operator>>(std::istream& in, LongInt& num) {
     return in;
 }
 
+LongInt LongInt::operator%(const LongInt& other) const {
+    LongInt result(*this);
+    LongInt divisor(other);
+    if (divisor < LongInt("0")) {
+        divisor = divisor * LongInt("-1");
+    }
+
+    while (result >= divisor) {
+        int borrow = 0;
+
+        for (int i = 0; i < divisor.digits.size(); ++i) {
+            int diff = result.digits[i] - borrow;
+            if (i < divisor.digits.size()) {
+                diff -= divisor.digits[i];
+            }
+            if (diff < 0) {
+                diff += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+            result.digits[i] = diff;
+        }
+        while (result.digits.size() > 1 && result.digits.back() == 0) {
+            result.digits.pop_back();
+        }
+    }
+
+    return result;
+}
+
+
+
+
+
+
 LongInt LongInt::left_shift(size_t shift) const {
     LongInt shifted(*this);
     shifted.digits.insert(shifted.digits.begin(), shift, 0);
@@ -191,11 +227,13 @@ LongInt LongInt::toom_cook_multiply(const LongInt& num1, const LongInt& num2) co
 
     LongInt mid_term = z2 + z3 - z0 - z4;
     LongInt z1 = mid_term.left_shift(m);
-    
+
     LongInt result = z0 + z1 + z2.left_shift(2 * m) + z3.left_shift(3 * m) + z4.left_shift(4 * m);
 
     return result;
 } 
+
+
 
 
 
