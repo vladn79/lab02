@@ -133,7 +133,6 @@ std::istream& operator>>(std::istream& in, LongInt& num) {
 
 LongInt LongInt::left_shift(size_t shift) const {
     LongInt shifted(*this);
-    // Вставляємо нулі на початок вектору
     shifted.digits.insert(shifted.digits.begin(), shift, 0);
     return shifted;
 }
@@ -141,17 +140,12 @@ LongInt LongInt::left_shift(size_t shift) const {
 
 
 LongInt LongInt::karatsuba_multiply(const LongInt& num1, const LongInt& num2) const {
-    // Код для множення методом Карацуби
-
-    // Обчислюємо розмір чисел
     size_t n = std::max(num1.digits.size(), num2.digits.size());
 
-    // Базовий випадок
     if (n == 1) {
-        return num1 * num2;  // Використовуємо звичайне множення для однозначних чисел
+        return num1 * num2; 
     }
 
-    // Розділяємо числа на дві половини
     size_t m = n / 2;
     LongInt high1, low1, high2, low2;
 
@@ -161,12 +155,10 @@ LongInt LongInt::karatsuba_multiply(const LongInt& num1, const LongInt& num2) co
     high2.digits.assign(num2.digits.begin(), num2.digits.begin() + m);
     low2.digits.assign(num2.digits.begin() + m, num2.digits.end());
 
-    // Рекурсивно обчислюємо три добутки
     LongInt z0 = karatsuba_multiply(low1, low2);
     LongInt z1 = karatsuba_multiply(low1 + high1, low2 + high2);
     LongInt z2 = karatsuba_multiply(high1, high2);
 
-    // Обчислюємо результат за формулою Карацуби
     LongInt result = z2 + ((z1 - z2 - z0).left_shift(m)) + (z0.left_shift(2 * m));
 
     return result;
