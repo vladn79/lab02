@@ -28,6 +28,7 @@ public:
     LongInt operator%(const LongInt& x);
     
 
+
     static std::string karatsuba_multiply(LongInt num1, LongInt num2);
     static std::string toom_cook_multiply(LongInt num1, LongInt num2);
 

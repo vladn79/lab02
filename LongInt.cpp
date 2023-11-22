@@ -160,6 +160,7 @@ LongInt LongInt::operator%(const LongInt& x) {
     return remainder;
 }
 
+
 std::ostream& operator<<(std::ostream& out, const LongInt& num) {
     out << num.value;
     return out;
