@@ -1,12 +1,10 @@
 #pragma once
-#include <vector>
 #include <iostream>
 
 class LongInt {
-private:
-    std::vector<int> digits;
 
 public:
+    std::string value;
     LongInt();
     LongInt(const std::string& numStr);
 
@@ -21,13 +19,18 @@ public:
     LongInt operator-(const LongInt& other) const;
     LongInt operator*(const LongInt& other) const;
     LongInt operator%(const LongInt& other) const;
-    LongInt operator/(const LongInt& other) const;
 
-    LongInt left_shift(size_t shift) const;
-    LongInt karatsuba_multiply(const LongInt& num1, const LongInt& num2) const;
-    LongInt toom_cook_multiply(const LongInt& num1, const LongInt& num2) const;
-    LongInt modular_multiply(const LongInt& num1, const LongInt& num2, const LongInt& modulus) const;
-     
+    std::string getValue() const;
+    std::string toString() const {
+        return value;
+    }
+
     friend std::ostream& operator<<(std::ostream& out, LongInt num);
     friend std::istream& operator>>(std::istream& in, LongInt& num);
+
+    long alignStrings(std::string& num1, std::string& num2);
+    LongInt multiplyByPowerOf10(const LongInt& num, long times);
+
+
+   LongInt karatsuba_multiply(const LongInt& num1, const LongInt& num2);
 };
