@@ -4,9 +4,12 @@
 using namespace std;
 
 int main() {
-    LongInt a, b;
-    cin >> a;
-    cin >> b;
-    cout <<"karatsuba = " << LongInt::karatsuba_multiply(a, b) << endl;
-    cout <<"toom_cook = " << LongInt::toom_cook_multiply(a, b) << endl;
+    LongInt n, m;
+    cin >> n;
+    cin >> m;
+    cout << n.ferma() << endl;
+    cout << n.karatsuba_multiply(n, m) << endl;
+    cout << n.toom_cook_multiply(n, m) << endl; 
+    return 0;
+
 }

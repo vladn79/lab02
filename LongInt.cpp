@@ -1,5 +1,7 @@
 #include "LongInt.h"
 #include <algorithm>
+#include <cmath>
+#include <ctime>
 using namespace std;
 int base = 10;
 
@@ -9,6 +11,18 @@ LongInt::LongInt(std::string x) {
 
 LongInt::LongInt() {
     value = "0";
+}
+
+
+LongInt Rand::next() {
+    LongInt xnext = xn * a + c;
+    xn = xnext % m;
+    return xn;
+}
+
+Rand::Rand(int seed, LongInt m_) {
+    m = m_;
+    xn = LongInt(seed);
 }
 
 long LongInt::alignStrings(std::string& num1, std::string& num2) {
@@ -85,7 +99,7 @@ std::string LongInt::multiplyByPowerOf10(std::string& num, long times) {
 
         return num;
 }
-bool LongInt::operator==(const LongInt& other) {
+bool LongInt::operator==(const LongInt& other) const {
     return value == other.value;
 }
 
@@ -127,7 +141,7 @@ LongInt LongInt::operator+(const LongInt& x) {
     return LongInt(add(value, x.value));
 }
 
-LongInt LongInt::operator-(const LongInt& x) {
+LongInt LongInt::operator-(const LongInt& x) const {
     return LongInt(sub(value, x.value));
 }
 
@@ -139,7 +153,7 @@ LongInt LongInt::operator*(int multiplier) {
     return result;
 }
 
-LongInt LongInt::operator%(const LongInt& x) {
+LongInt LongInt::operator%(const LongInt& x) const  {
     LongInt quotient, remainder, temp;
     LongInt dividend = *this;
 
@@ -246,3 +260,47 @@ std::string LongInt::toom_cook_multiply(LongInt num1, LongInt num2) {
 
         return res.value.erase(0, min(res.value.find_first_not_of('0'), res.value.size() - 1));
 }
+
+
+LongInt LongInt::pow_mod(const LongInt &other, const LongInt &modulus) const {
+    if (modulus == LongInt("1"))
+        return LongInt("0");
+
+    LongInt result("1");
+    LongInt base = *this % modulus;
+    LongInt exponent = other;
+
+    while (exponent > LongInt("0")) {
+        if (exponent % LongInt("2") == LongInt("1"))
+            result = LongInt((result.karatsuba_multiply(result, base))) % modulus;
+
+        exponent = exponent / 2;
+        base = LongInt((base.karatsuba_multiply(base, base))) % modulus;
+    }
+
+    return result;
+}
+
+bool LongInt::ferma() const {
+    if (*this == LongInt("2"))
+        return true;
+    if (*this % LongInt("2") == LongInt("0"))
+        return false;
+
+    bool prime = true;
+    srand(time(0));
+    Rand r(rand(), *this - LongInt("1"));
+    int k = 4;
+
+    while (k > 0 && prime) {
+        k--;
+        LongInt test = r.next();
+        test = test.pow_mod(*this - LongInt("1"), *this);
+        if (test != LongInt("1"))
+            prime = false;
+    }
+
+    return prime;
+}
+
+
