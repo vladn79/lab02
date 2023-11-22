@@ -24,11 +24,14 @@ public:
     LongInt& operator=(std::string x);
     LongInt operator+(const LongInt& x);
     LongInt operator-(const LongInt& x);
+    LongInt operator*(int multiplier);
+    LongInt operator%(const LongInt& x);
+    
 
     static std::string karatsuba_multiply(LongInt num1, LongInt num2);
     static std::string toom_cook_multiply(LongInt num1, LongInt num2);
 
 
-    friend std::ostream& operator<<(std::ostream& out, LongInt num);
+    friend std::ostream& operator<<(std::ostream& out, const LongInt& num);
     friend std::istream& operator>>(std::istream& in, LongInt& num);
 };

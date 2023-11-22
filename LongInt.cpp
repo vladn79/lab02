@@ -131,6 +131,35 @@ LongInt LongInt::operator-(const LongInt& x) {
     return LongInt(sub(value, x.value));
 }
 
+LongInt LongInt::operator*(int multiplier) {
+    LongInt result = *this;
+    for (int i = 1; i < multiplier; ++i) {
+        result = result + *this;
+    }
+    return result;
+}
+
+LongInt LongInt::operator%(const LongInt& x) {
+    LongInt quotient, remainder, temp;
+    LongInt dividend = *this;
+
+    while (dividend >= x) {
+        temp = x;
+        LongInt current_quotient = "1"s;
+
+        while (dividend >= temp) {
+            dividend = dividend - temp;
+            quotient = quotient + current_quotient;
+
+            temp = temp * 10;
+            current_quotient = current_quotient * 10;
+        }
+    }
+
+    remainder = dividend;
+    return remainder;
+}
+
 std::ostream& operator<<(std::ostream& out, const LongInt& num) {
     out << num.value;
     return out;
