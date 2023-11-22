@@ -1,12 +1,18 @@
 #pragma once
-#include <iostream>
+#include <string>
 
 class LongInt {
-
 public:
     std::string value;
+    
+    LongInt(std::string x);
     LongInt();
-    LongInt(const std::string& numStr);
+
+    static long alignStrings(std::string& num1, std::string& num2);
+    static std::string add(std::string num1, std::string num2);
+    static std::string sub(std::string num1, std::string num2);
+    static std::string multiplyByPowerOf10(std::string& num, long times);
+
 
     bool operator ==(const LongInt& other);
     bool operator !=(const LongInt& other);
@@ -15,22 +21,14 @@ public:
     bool operator >=(const LongInt& other);
     bool operator <(const LongInt& other);
 
-    LongInt operator+(const LongInt& other);
-    LongInt operator-(const LongInt& other) const;
-    LongInt operator*(const LongInt& other) const;
-    LongInt operator%(const LongInt& other) const;
+    LongInt& operator=(std::string x);
+    LongInt operator+(const LongInt& x);
+    LongInt operator-(const LongInt& x);
 
-    std::string getValue() const;
-    std::string toString() const {
-        return value;
-    }
+    static std::string karatsuba_multiply(LongInt num1, LongInt num2);
+    static std::string toom_cook_multiply(LongInt num1, LongInt num2);
+
 
     friend std::ostream& operator<<(std::ostream& out, LongInt num);
     friend std::istream& operator>>(std::istream& in, LongInt& num);
-
-    long alignStrings(std::string& num1, std::string& num2);
-    LongInt multiplyByPowerOf10(const LongInt& num, long times);
-
-
-   LongInt karatsuba_multiply(const LongInt& num1, const LongInt& num2);
 };
