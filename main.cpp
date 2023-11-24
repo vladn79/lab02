@@ -8,6 +8,8 @@ int main() {
     cin >> n;
     cin >> m;
     cout << n.ferma() << endl;
+
+    
     cout << n.karatsuba_multiply(n, m) << endl;
     cout << n.toom_cook_multiply(n, m) << endl; 
     return 0;
