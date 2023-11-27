@@ -34,6 +34,7 @@ public:
 
     static std::string karatsuba_multiply(LongInt num1, LongInt num2);
     static std::string toom_cook_multiply(LongInt num1, LongInt num2);
+    static std::string shenhageMultiply(LongInt num1, LongInt num2);
 
 
     friend std::ostream& operator<<(std::ostream& out, LongInt num);

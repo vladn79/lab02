@@ -333,3 +333,7 @@ std::string LongInt::toom_cook_multiply(LongInt num1, LongInt num2) {
 
         return res.value.erase(0, min(res.value.find_first_not_of('0'), res.value.size() - 1));
 }
+std::string LongInt::shenhageMultiply(LongInt num1, LongInt num2) {
+    LongInt result = LongInt(karatsuba_multiply(num1, num2)) % LongInt("12312312312312312312312312313231231231231231231231231231231231231231231231231231231231231231231231123123");
+    return result.value;
+}
