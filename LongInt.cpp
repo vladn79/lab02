@@ -141,9 +141,6 @@ LongInt LongInt::operator*(int n) const {
 
 LongInt LongInt::operator/(int n) const {
     if (n == 0) {
-        // Handle division by zero
-        // You can throw an exception or handle it in some way appropriate for your application.
-        // For simplicity, I'll return a LongInt with value "0" here.
         return LongInt("0");
     }
 
@@ -165,24 +162,15 @@ LongInt LongInt::operator/(int n) const {
 }
 
 LongInt LongInt::operator/(const LongInt& other) const {
-    // Implement division of two LongInts
-    // You can use a division algorithm of your choice
-    // For simplicity, I'll return a LongInt with value "0" here.
     return LongInt("0");
 }
 
 LongInt LongInt::operator%(const LongInt& other) const {
-    // Implement modulo operation
-    // You can use a modulo algorithm of your choice
-    // For simplicity, I'll return a LongInt with value "0" here.
     return LongInt("0");
 }
 
 LongInt LongInt::operator%(int n) const {
     if (n == 0) {
-        // Handle modulo by zero
-        // You can throw an exception or handle it in some way appropriate for your application.
-        // For simplicity, I'll return a LongInt with value "0" here.
         return LongInt("0");
     }
 

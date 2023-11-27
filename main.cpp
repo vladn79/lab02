@@ -11,7 +11,7 @@ int main() {
     cout << "multtttt = " << (a * b).value<< endl;//correct
     cout << "mul11111 = " << (a * c).value<< endl;//correct
     cout << "division = " << (a / c).value<< endl;//correct
-    
+    cout << "division11 = " << (a % c).value<< endl;
     cout <<"karatsuba = " << LongInt::karatsuba_multiply(a, b) << endl;
     cout <<"toom_cook = " << LongInt::toom_cook_multiply(a, b) << endl;
 }
