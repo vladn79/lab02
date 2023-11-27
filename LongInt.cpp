@@ -1,5 +1,7 @@
 #include "LongInt.h"
 #include <algorithm>
+#include <cmath>
+#include <complex>
 using namespace std;
 int base = 10;
 
@@ -337,3 +339,63 @@ std::string LongInt::shenhageMultiply(LongInt num1, LongInt num2) {
     LongInt result = LongInt(karatsuba_multiply(num1, num2)) % LongInt("12312312312312312312312312313231231231231231231231231231231231231231231231231231231231231231231231123123");
     return result.value;
 }
+
+
+LongInt LongInt::schonhageStrassenMultiply(const LongInt& operandA, const LongInt& operandB) {
+
+    std::vector<int> coeffsA = operandA.coefficients;
+    std::vector<int> coeffsB = operandB.coefficients;
+
+    size_t newSize = 1;
+    while (newSize < std::max(coeffsA.size(), coeffsB.size())) {
+        newSize *= 2;
+    }
+    coeffsA.resize(newSize);
+    coeffsB.resize(newSize);
+    std::vector<int> resultCoefficients(newSize * 2, 0);
+
+    for (size_t i = 0; i < newSize; ++i) {
+        for (size_t j = 0; j < newSize; ++j) {
+            resultCoefficients[i + j] += coeffsA[i] * coeffsB[j];
+        }
+    }
+
+
+    for (size_t i = 0; i < resultCoefficients.size() - 1; ++i) {
+        resultCoefficients[i + 1] += resultCoefficients[i] / 10;
+        resultCoefficients[i] %= 10;
+    }
+
+
+    return LongInt(resultCoefficients);
+}
+
+
+void LongInt::fft(std::vector<std::complex<double>>& a, bool invert) {
+    const double PI = invert ? -acos(-1) : acos(-1);
+    const size_t n = a.size();
+
+    if (n <= 1) {
+        return;
+    }
+
+    std::vector<std::complex<double>> a0(n / 2), a1(n / 2);
+    for (size_t i = 0, j = 0; i < n; i += 2, ++j) {
+        a0[j] = a[i];
+        a1[j] = a[i + 1];
+    }
+
+    fft(a0, invert);
+    fft(a1, invert);
+
+    for (size_t i = 0; i < n / 2; ++i) {
+        std::complex<double> t = std::polar(1.0, -2 * PI * i / n) * a1[i];
+        a[i] = a0[i] + t;
+        a[i + n / 2] = a0[i] - t;
+        if (invert) {
+            a[i] /= 2;
+            a[i + n / 2] /= 2;
+        }
+    }
+}
+

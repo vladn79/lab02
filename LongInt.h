@@ -1,13 +1,16 @@
 #pragma once
 #include <string>
-
+#include <vector>
+#include <complex>
 class LongInt {
 public:
     std::string value;
+    std::vector<int> coefficients;
     
     LongInt(std::string x);
     LongInt(int n);
     LongInt();
+    LongInt(const std::vector<int>& coeffs) : coefficients(coeffs) {}
 
     static long alignStrings(std::string& num1, std::string& num2);
     static std::string add(std::string num1, std::string num2);
@@ -35,8 +38,11 @@ public:
     static std::string karatsuba_multiply(LongInt num1, LongInt num2);
     static std::string toom_cook_multiply(LongInt num1, LongInt num2);
     static std::string shenhageMultiply(LongInt num1, LongInt num2);
+    static LongInt schonhageStrassenMultiply(const LongInt& operandA, const LongInt& operandB);
 
 
     friend std::ostream& operator<<(std::ostream& out, LongInt num);
     friend std::istream& operator>>(std::istream& in, LongInt& num);
+
+    static void fft(std::vector<std::complex<double>>& a, bool invert);
 };
