@@ -1,7 +1,5 @@
 #include "LongInt.h"
 #include <algorithm>
-#include <cmath>
-#include <ctime>
 using namespace std;
 int base = 10;
 
@@ -11,18 +9,6 @@ LongInt::LongInt(std::string x) {
 
 LongInt::LongInt() {
     value = "0";
-}
-
-
-LongInt Rand::next() {
-    LongInt xnext = xn * a + c;
-    xn = xnext % m;
-    return xn;
-}
-
-Rand::Rand(int seed, LongInt m_) {
-    m = m_;
-    xn = LongInt(seed);
 }
 
 long LongInt::alignStrings(std::string& num1, std::string& num2) {
@@ -99,7 +85,7 @@ std::string LongInt::multiplyByPowerOf10(std::string& num, long times) {
 
         return num;
 }
-bool LongInt::operator==(const LongInt& other) const {
+bool LongInt::operator==(const LongInt& other) {
     return value == other.value;
 }
 
@@ -141,37 +127,76 @@ LongInt LongInt::operator+(const LongInt& x) {
     return LongInt(add(value, x.value));
 }
 
-LongInt LongInt::operator-(const LongInt& x) const {
+LongInt LongInt::operator-(const LongInt& x) {
     return LongInt(sub(value, x.value));
 }
 
-LongInt LongInt::operator*(int multiplier) {
-    LongInt result = *this;
-    for (int i = 1; i < multiplier; ++i) {
-        result = result + *this;
+LongInt LongInt::operator*(const LongInt& other) const {
+    return LongInt(karatsuba_multiply(*this, other));
+}
+
+LongInt LongInt::operator*(int n) const {
+    return *this * LongInt(std::to_string(n));
+}
+
+LongInt LongInt::operator/(int n) const {
+    if (n == 0) {
+        // Handle division by zero
+        // You can throw an exception or handle it in some way appropriate for your application.
+        // For simplicity, I'll return a LongInt with value "0" here.
+        return LongInt("0");
     }
+
+    LongInt result;
+    std::string quotient;
+    long long carry = 0;
+
+    for (char digit : value) {
+        long long currentDigit = digit - '0' + carry * base;
+        carry = currentDigit % n;
+        currentDigit /= n;
+        quotient.push_back(static_cast<char>(currentDigit + '0'));
+    }
+
+    quotient.erase(0, min(quotient.find_first_not_of('0'), quotient.size() - 1));
+    result.value = quotient.empty() ? "0" : quotient;
+
     return result;
 }
 
-LongInt LongInt::operator%(const LongInt& x) const  {
-    LongInt quotient, remainder, temp;
-    LongInt dividend = *this;
+LongInt LongInt::operator/(const LongInt& other) const {
+    // Implement division of two LongInts
+    // You can use a division algorithm of your choice
+    // For simplicity, I'll return a LongInt with value "0" here.
+    return LongInt("0");
+}
 
-    while (dividend >= x) {
-        temp = x;
-        LongInt current_quotient = "1"s;
+LongInt LongInt::operator%(const LongInt& other) const {
+    // Implement modulo operation
+    // You can use a modulo algorithm of your choice
+    // For simplicity, I'll return a LongInt with value "0" here.
+    return LongInt("0");
+}
 
-        while (dividend >= temp) {
-            dividend = dividend - temp;
-            quotient = quotient + current_quotient;
-
-            temp = temp * 10;
-            current_quotient = current_quotient * 10;
-        }
+LongInt LongInt::operator%(int n) const {
+    if (n == 0) {
+        // Handle modulo by zero
+        // You can throw an exception or handle it in some way appropriate for your application.
+        // For simplicity, I'll return a LongInt with value "0" here.
+        return LongInt("0");
     }
 
-    remainder = dividend;
-    return remainder;
+    LongInt result;
+    long long remainder = 0;
+
+    for (int i = value.size() - 1; i >= 0; --i) {
+        long long currentDigit = value[i] - '0' + remainder * base;
+        remainder = currentDigit % n;
+    }
+
+    result.value = std::to_string(remainder);
+
+    return result;
 }
 
 
@@ -179,6 +204,9 @@ std::ostream& operator<<(std::ostream& out, const LongInt& num) {
     out << num.value;
     return out;
 }
+
+
+
 
 std::istream& operator>>(std::istream& in, LongInt& num) {
     std::string input;
@@ -260,47 +288,3 @@ std::string LongInt::toom_cook_multiply(LongInt num1, LongInt num2) {
 
         return res.value.erase(0, min(res.value.find_first_not_of('0'), res.value.size() - 1));
 }
-
-
-LongInt LongInt::pow_mod(const LongInt &other, const LongInt &modulus) const {
-    if (modulus == LongInt("1"))
-        return LongInt("0");
-
-    LongInt result("1");
-    LongInt base = *this % modulus;
-    LongInt exponent = other;
-
-    while (exponent > LongInt("0")) {
-        if (exponent % LongInt("2") == LongInt("1"))
-            result = LongInt((result.karatsuba_multiply(result, base))) % modulus;
-
-        exponent = exponent / 2;
-        base = LongInt((base.karatsuba_multiply(base, base))) % modulus;
-    }
-
-    return result;
-}
-
-bool LongInt::ferma() const {
-    if (*this == LongInt("2"))
-        return true;
-    if (*this % LongInt("2") == LongInt("0"))
-        return false;
-
-    bool prime = true;
-    srand(time(0));
-    Rand r(rand(), *this - LongInt("1"));
-    int k = 4;
-
-    while (k > 0 && prime) {
-        k--;
-        LongInt test = r.next();
-        test = test.pow_mod(*this - LongInt("1"), *this);
-        if (test != LongInt("1"))
-            prime = false;
-    }
-
-    return prime;
-}
-
-

@@ -4,14 +4,14 @@
 using namespace std;
 
 int main() {
-    LongInt n, m;
-    cin >> n;
-    cin >> m;
-    cout << n.ferma() << endl;
-
+    LongInt a, b;
+    cin >> a;
+    cin >> b;
+    int c = 6;
+    cout << "multtttt = " << (a * b).value<< endl;//correct
+    cout << "mul11111 = " << (a * c).value<< endl;//correct
+    cout << "division = " << (a / c).value<< endl;//correct
     
-    cout << n.karatsuba_multiply(n, m) << endl;
-    cout << n.toom_cook_multiply(n, m) << endl; 
-    return 0;
-
+    cout <<"karatsuba = " << LongInt::karatsuba_multiply(a, b) << endl;
+    cout <<"toom_cook = " << LongInt::toom_cook_multiply(a, b) << endl;
 }
