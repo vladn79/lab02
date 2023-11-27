@@ -6,6 +6,7 @@ public:
     std::string value;
     
     LongInt(std::string x);
+    LongInt(int n);
     LongInt();
 
     static long alignStrings(std::string& num1, std::string& num2);

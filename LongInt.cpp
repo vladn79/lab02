@@ -11,6 +11,11 @@ LongInt::LongInt() {
     value = "0";
 }
 
+LongInt::LongInt(int n) {
+    value = std::to_string(n);
+}
+
+
 long LongInt::alignStrings(std::string& num1, std::string& num2) {
     long n = std::max(num1.size(), num2.size());
 
@@ -162,12 +167,64 @@ LongInt LongInt::operator/(int n) const {
 }
 
 LongInt LongInt::operator/(const LongInt& other) const {
-    return LongInt("0");
+    if (other.value == "0") {
+        return LongInt("0");
+    }
+
+    LongInt quotient;
+    LongInt dividend(value);
+    LongInt divisor(other.value);
+
+    bool negativeResult = (dividend.value[0] == '-' && divisor.value[0] != '-') || (dividend.value[0] != '-' && divisor.value[0] == '-');
+    dividend.value.erase(0, min(dividend.value.find_first_not_of('-'), dividend.value.size() - 1));
+    divisor.value.erase(0, min(divisor.value.find_first_not_of('-'), divisor.value.size() - 1));
+
+    LongInt currentDividend;
+    for (size_t i = 0; i < dividend.value.size(); ++i) {
+        currentDividend = currentDividend * 10 + LongInt(dividend.value[i] - '0');
+        int count = 0;
+
+        while (currentDividend >= divisor) {
+            currentDividend = currentDividend - divisor;
+            count++;
+        }
+
+        quotient = quotient * 10 + LongInt(count);
+    }
+    if (negativeResult) {
+        quotient.value.insert(0, "-");
+    }
+
+    return quotient;
 }
 
 LongInt LongInt::operator%(const LongInt& other) const {
-    return LongInt("0");
+    if (other.value == "0") {
+        return LongInt("0");
+    }
+
+    LongInt dividend(value);
+    LongInt divisor(other.value);
+
+    bool negativeResult = (dividend.value[0] == '-' && divisor.value[0] != '-') || (dividend.value[0] != '-' && divisor.value[0] == '-');
+    dividend.value.erase(0, min(dividend.value.find_first_not_of('-'), dividend.value.size() - 1));
+    divisor.value.erase(0, min(divisor.value.find_first_not_of('-'), divisor.value.size() - 1));
+
+    LongInt currentDividend;
+    for (size_t i = 0; i < dividend.value.size(); ++i) {
+        currentDividend = currentDividend * 10 + LongInt(dividend.value[i] - '0');
+
+        while (currentDividend >= divisor) {
+            currentDividend = currentDividend - divisor;
+        }
+    }
+    if (negativeResult) {
+        currentDividend.value.insert(0, "-");
+    }
+
+    return currentDividend;
 }
+
 
 LongInt LongInt::operator%(int n) const {
     if (n == 0) {
