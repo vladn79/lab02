@@ -342,7 +342,6 @@ std::string LongInt::shenhageMultiply(LongInt num1, LongInt num2) {
 
 
 LongInt LongInt::schonhageStrassenMultiply(const LongInt& operandA, const LongInt& operandB) {
-
     std::vector<int> coeffsA = operandA.coefficients;
     std::vector<int> coeffsB = operandB.coefficients;
 
@@ -354,21 +353,40 @@ LongInt LongInt::schonhageStrassenMultiply(const LongInt& operandA, const LongIn
     coeffsB.resize(newSize);
     std::vector<int> resultCoefficients(newSize * 2, 0);
 
+
+    std::vector<std::complex<double>> a(newSize * 2, 0);
     for (size_t i = 0; i < newSize; ++i) {
-        for (size_t j = 0; j < newSize; ++j) {
-            resultCoefficients[i + j] += coeffsA[i] * coeffsB[j];
-        }
+        a[i] = coeffsA[i];
+    }
+    fft(a, false);
+
+    std::vector<std::complex<double>> b(newSize * 2, 0);
+    for (size_t i = 0; i < newSize; ++i) {
+        b[i] = coeffsB[i];
+    }
+    fft(b, false);
+
+
+    for (size_t i = 0; i < a.size(); ++i) {
+        a[i] *= b[i];
     }
 
+
+    fft(a, true);
+
+
+    for (size_t i = 0; i < resultCoefficients.size(); ++i) {
+        resultCoefficients[i] = static_cast<int>(std::round(a[i].real()));
+    }
 
     for (size_t i = 0; i < resultCoefficients.size() - 1; ++i) {
         resultCoefficients[i + 1] += resultCoefficients[i] / 10;
         resultCoefficients[i] %= 10;
     }
 
-
     return LongInt(resultCoefficients);
 }
+
 
 
 void LongInt::fft(std::vector<std::complex<double>>& a, bool invert) {
@@ -398,4 +416,3 @@ void LongInt::fft(std::vector<std::complex<double>>& a, bool invert) {
         }
     }
 }
-
