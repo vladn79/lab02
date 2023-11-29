@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
+#include <cstdlib> // Для функції rand()
+#include <ctime>
 using namespace std;
 int base = 10;
 
@@ -26,6 +28,20 @@ long LongInt::alignStrings(std::string& num1, std::string& num2) {
 
     while (num2.size() < n)
         num2.insert(0, "0");
+
+    return n;
+}
+long LongInt::alignStrings(const std::string& num1, const std::string& num2) {
+    long n = std::max(num1.size(), num2.size());
+
+    std::string alignedNum1 = num1;
+    std::string alignedNum2 = num2;
+
+    while (alignedNum1.size() < n)
+        alignedNum1.insert(0, "0");
+
+    while (alignedNum2.size() < n)
+        alignedNum2.insert(0, "0");
 
     return n;
 }
@@ -129,12 +145,46 @@ LongInt& LongInt::operator=(std::string x) {
     *this = LongInt(std::move(x));
     return *this;
 }
+bool LongInt::operator ==(const LongInt& other) const {
+    return value == other.value;
+}
+
+
+bool LongInt::operator <(const LongInt& other) const {
+    if (value.size() != other.value.size()) {
+        return value.size() < other.value.size();
+    }
+    for (int i = int(value.size()) - 1; i >= 0; --i) {
+        if (value[i] < other.value[i]) {
+            return true;
+        } else if (value[i] > other.value[i]) {
+            return false;
+        }
+    }
+    return false;
+}
+bool LongInt::operator>(const LongInt& other) const {
+    if (value.size() != other.value.size()) {
+        return value.size() > other.value.size();
+    }
+    for (int i = int(value.size()) - 1; i >= 0; --i) {
+        if (value[i] > other.value[i]) {
+            return true;
+        } else if (value[i] < other.value[i]) {
+            return false;
+        }
+    }
+    return false;
+}
 
 LongInt LongInt::operator+(const LongInt& x) {
     return LongInt(add(value, x.value));
 }
 
-LongInt LongInt::operator-(const LongInt& x) {
+LongInt LongInt::operator-(const LongInt& x)  {
+    return LongInt(sub(value, x.value));
+}
+LongInt LongInt::operator-(const LongInt& x) const {
     return LongInt(sub(value, x.value));
 }
 
@@ -416,3 +466,57 @@ void LongInt::fft(std::vector<std::complex<double>>& a, bool invert) {
         }
     }
 }
+
+
+LongInt LongInt::power(LongInt a, LongInt b, LongInt mod) {
+    LongInt result = 1;
+    a = a % mod;
+    while (b > 0) {
+        if (b % 2 == 1)
+            result = (result * a) % mod;
+        b = b / 2;
+        a = (a * a) % mod;
+    }
+    return result;
+}
+
+bool isPrimeFermat(LongInt n, int iterations) {
+    if (n <= 1 || n == 4)
+        return false;
+    if (n <= 3)
+        return true;
+
+    for (int i = 0; i < iterations; ++i) {
+
+        LongInt a = LongInt("2") + a.randomA(n) % (n - 3);
+
+
+        if (n.power(a, n - 1, n) != 1)
+            return false;
+    }
+
+    return true;
+}
+
+
+
+
+LongInt LongInt::random(const LongInt& min, const LongInt& max) {
+
+    int randNum = rand() % (std::stoi(max.value) - std::stoi(min.value) + 1) + std::stoi(min.value);
+    return LongInt(std::to_string(randNum));
+}
+LongInt LongInt::randomA(const LongInt& n) {
+
+    LongInt min("2");
+    LongInt max = n - LongInt("2");
+    return random(min, max);
+}
+
+
+int LongInt::toInt() const {
+    return std::stoi(value);
+}
+
+
+

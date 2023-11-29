@@ -6,20 +6,12 @@ using namespace std;
 
 int main() {
     LongInt a, b, c;
-    cin >> a;
-    cin >> b;
+    int n = 5;
 
-    cout << "karatsuba = " << LongInt::karatsuba_multiply(a, b) << endl;
-    cout << "toom_cook = " << LongInt::toom_cook_multiply(a, b) << endl;
-    cout << "modular m = " << LongInt::shenhageMultiply(a, b) << endl;// таке собі...
-    std::vector<int> coeffsA = {3, 2};
-    std::vector<int> coeffsB = {5}; 
+    cin >> c;
 
-    LongInt numA(coeffsA);
-    LongInt numB(coeffsB);
 
-    LongInt result = LongInt::schonhageStrassenMultiply(numA, numB);
-    for (int i = result.coefficients.size() - 1; i >= 0; --i) {
-        std::cout << result.coefficients[i];
-    }
+    cout << isPrimeFermat(c, n);
+    return 0;
+
 }
