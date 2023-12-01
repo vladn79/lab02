@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
+#include <cstdlib> 
+#include <ctime>
 using namespace std;
 int base = 10;
 
@@ -26,6 +28,22 @@ long LongInt::alignStrings(std::string& num1, std::string& num2) {
 
     while (num2.size() < n)
         num2.insert(0, "0");
+
+    return n;
+}
+
+
+long LongInt::alignStrings(const std::string& num1, const std::string& num2) {
+    long n = std::max(num1.size(), num2.size());
+
+    std::string alignedNum1 = num1;
+    std::string alignedNum2 = num2;
+
+    while (alignedNum1.size() < n)
+        alignedNum1.insert(0, "0");
+
+    while (alignedNum2.size() < n)
+        alignedNum2.insert(0, "0");
 
     return n;
 }
@@ -137,6 +155,9 @@ LongInt LongInt::operator+(const LongInt& x) {
 LongInt LongInt::operator-(const LongInt& x) {
     return LongInt(sub(value, x.value));
 }
+LongInt LongInt::operator-(const LongInt& x) const {
+    return LongInt(sub(value, x.value));
+}
 
 LongInt LongInt::operator*(const LongInt& other) const {
     return LongInt(karatsuba_multiply(*this, other));
@@ -144,6 +165,38 @@ LongInt LongInt::operator*(const LongInt& other) const {
 
 LongInt LongInt::operator*(int n) const {
     return *this * LongInt(std::to_string(n));
+}
+
+bool LongInt::operator ==(const LongInt& other) const {
+    return value == other.value;
+}
+
+
+bool LongInt::operator <(const LongInt& other) const {
+    if (value.size() != other.value.size()) {
+        return value.size() < other.value.size();
+    }
+    for (int i = int(value.size()) - 1; i >= 0; --i) {
+        if (value[i] < other.value[i]) {
+            return true;
+        } else if (value[i] > other.value[i]) {
+            return false;
+        }
+    }
+    return false;
+}
+bool LongInt::operator>(const LongInt& other) const {
+    if (value.size() != other.value.size()) {
+        return value.size() > other.value.size();
+    }
+    for (int i = int(value.size()) - 1; i >= 0; --i) {
+        if (value[i] > other.value[i]) {
+            return true;
+        } else if (value[i] < other.value[i]) {
+            return false;
+        }
+    }
+    return false;
 }
 
 LongInt LongInt::operator/(int n) const {
@@ -415,4 +468,132 @@ void LongInt::fft(std::vector<std::complex<double>>& a, bool invert) {
             a[i + n / 2] /= 2;
         }
     }
+}
+
+
+ auto LongInt::rbegin() const {
+        return value.rbegin();
+    }
+
+auto LongInt::rend() const {
+        return value.rend();
+    }
+void LongInt::removeLeadingZero() {
+        auto nonZeroPos = std::find_if_not(coefficients.rbegin(), coefficients.rend(), [](int digit) {
+            return digit == 0;
+        });
+        coefficients.erase(nonZeroPos.base(), coefficients.end());  
+    }
+
+LongInt LongInt::power(LongInt a, LongInt b, LongInt mod) {
+    LongInt result = 1;
+    a = a % mod;
+    while (b > 0) {
+        if (b % 2 == 1)
+            result = (result * a) % mod;
+        b = b / 2;
+        a = (a * a) % mod;
+    }
+    return result;
+}
+
+bool isPrimeFermat(LongInt n, int iterations) {
+    if (n <= 1 || n == 4)
+        return false;
+    if (n <= 3)
+        return true;
+
+    for (int i = 0; i < iterations; ++i) {
+
+        LongInt a = LongInt("2") + LongInt(rand()) % (n - 3);
+
+
+        if (n.power(a, n - 1, n) != 1)
+            return false;
+    }
+
+    return true;
+}
+
+LongInt Rand::next() {
+    LongInt xnext = xn * a + c;
+    xn = xnext % m;
+    return xn;
+}
+
+Rand::Rand(LongInt seed, LongInt m_) {
+    m = m_;
+    xn = seed;
+}
+
+LongInt LongInt::pow_mod(const LongInt &other, const LongInt& modulus) const { //this ^ other % modulus
+    if (modulus == 1)
+        return 0;
+    LongInt r = 1;
+    LongInt b = *this % modulus;
+    LongInt e = other;
+    while (e > 0){
+        if (e % 2 == 1)
+            r = (r * b) % modulus;
+        e = e / 2;
+        b = (b * b) % modulus;
+    }
+    return r;
+}
+
+bool LongInt::fermat() const {
+    if (*this == 2)
+        return true;
+    if (*this % 2 == 0)
+        return false;
+    bool prime = true;
+    srand(time(0));
+    Rand r(rand(), *this - 1);
+    int k = 4;
+    while (k > 0 && prime){
+        k--;
+        LongInt test = r.next();
+        test = test.pow_mod(*this - 1, *this);
+        if (test != 1)
+            prime = false;
+    }
+    return prime;
+}
+
+bool LongInt::rab_mil() const {
+    if (*this == 2)
+        return true;
+    if (*this % 2 == 0) {
+        cout << "f";
+        return false;
+    }
+    int r = 0;
+    LongInt d = *this - 1;
+    while (d % 2 == 0) {
+        d = d / 2;
+        r++;
+    }
+    int k = 4;
+    bool prime = true;
+    srand(time(0));
+    Rand rnd(rand(), *this - 1);
+    while(k > 0 && prime) {
+        k--;
+        LongInt a = rnd.next();
+        while (a == 1 || a == 0) {
+            a = rnd.next();
+        }
+        LongInt x = a.pow_mod(d, *this);
+        if (x == 1 || x == *this - 1)
+            continue;
+        bool flag = true;
+        for (int i = 0; i < r - 1 && prime && flag; i++) {
+            x = x.pow_mod(2, *this);
+            if (x == *this - 1)
+                flag = false;
+        }
+        prime = !flag;
+    }
+
+    return prime;
 }

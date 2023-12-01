@@ -15,7 +15,7 @@ std::vector<int> stringToVector(const LongInt& inputNum) {
     return result;
 }
 int main() {
-    LongInt a, b, c;
+    LongInt a, b;
     cin >> a;
     cin >> b;
 
@@ -34,4 +34,9 @@ int main() {
     for (int i = result.coefficients.size() - 1; i >= 0; --i) {
         std::cout << result.coefficients[i];
     }
+    cout << endl;
+    LongInt c("3");
+    cout << "Ferma :" << c.fermat() << endl;
+    cout << "Rab_m :" << c.rab_mil() << endl;
+
 }
