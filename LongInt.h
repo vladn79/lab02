@@ -4,6 +4,7 @@
 #include <complex>
 class LongInt {
 public:
+    int Size = 1; 
     std::string value;
     std::vector<int> coefficients;
     
@@ -54,4 +55,15 @@ public:
     auto rend() const {
         return value.rend();
     }
+
+    void trim() {
+    int n = value.find_first_not_of('0');
+    if (n != std::string::npos){
+        value = value.substr(n);
+        Size = value.size();
+    } else{
+        value = "0";
+        Size = 1;
+    }
+}
 };

@@ -27,7 +27,7 @@ int main() {
 
     LongInt numA(coeffsA);
     LongInt numB(coeffsB);
-
+    cout << "Schonhage = ";
     LongInt result = LongInt::schonhageStrassenMultiply(numA, numB);
     for (int i = result.coefficients.size() - 1; i >= 0; --i) {
         std::cout << result.coefficients[i];
