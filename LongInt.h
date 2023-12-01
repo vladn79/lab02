@@ -2,10 +2,10 @@
 #include <string>
 #include <vector>
 #include <complex>
+#include <cstdlib>
 #include <algorithm>
 class LongInt {
 public:
-    int Size = 1; 
     std::string value;
     std::vector<int> coefficients;
     
@@ -19,7 +19,6 @@ public:
     static std::string add(std::string num1, std::string num2);
     static std::string sub(std::string num1, std::string num2);
     static std::string multiplyByPowerOf10(std::string& num, long times);
-    LongInt power(LongInt a, LongInt b, LongInt mod);
 
 
     bool operator ==(const LongInt& other);
@@ -48,11 +47,10 @@ public:
     static std::string toom_cook_multiply(LongInt num1, LongInt num2);
     static std::string shenhageMultiply(LongInt num1, LongInt num2);
     static LongInt schonhageStrassenMultiply(const LongInt& operandA, const LongInt& operandB);
-    bool isPrimeFermat(LongInt n, int iterations);
     int toInt() const;
 
-    LongInt pow_mod(const LongInt& other, const LongInt& modulus) const;
-    bool fermat() const;
+    LongInt power(const LongInt& a, const LongInt& b, const LongInt& mod) const;
+    bool isPrimeFermat(LongInt n, int iterations);
     bool rab_mil() const;
 
 
@@ -69,14 +67,4 @@ public:
     void removeLeadingZero();
 
 
-};
-
-class Rand {
-    LongInt xn;
-    int a = 11;
-    LongInt c = LongInt("1");
-    LongInt m;
-public:
-    Rand(LongInt seed = LongInt("2"), LongInt m = LongInt("100000000000000"));
-    LongInt next();
 };

@@ -485,19 +485,9 @@ void LongInt::removeLeadingZero() {
         coefficients.erase(nonZeroPos.base(), coefficients.end());  
     }
 
-LongInt LongInt::power(LongInt a, LongInt b, LongInt mod) {
-    LongInt result = 1;
-    a = a % mod;
-    while (b > 0) {
-        if (b % 2 == 1)
-            result = (result * a) % mod;
-        b = b / 2;
-        a = (a * a) % mod;
-    }
-    return result;
-}
 
-bool isPrimeFermat(LongInt n, int iterations) {
+
+bool LongInt::isPrimeFermat(LongInt n, int iterations) {
     if (n <= 1 || n == 4)
         return false;
     if (n <= 3)
@@ -505,7 +495,8 @@ bool isPrimeFermat(LongInt n, int iterations) {
 
     for (int i = 0; i < iterations; ++i) {
 
-        LongInt a = LongInt("2") + LongInt(rand()) % (n - 3);
+        LongInt a("2");
+        a = a + LongInt("2") + LongInt(rand()) % (n - 3);
 
 
         if (n.power(a, n - 1, n) != 1)
@@ -515,85 +506,59 @@ bool isPrimeFermat(LongInt n, int iterations) {
     return true;
 }
 
-LongInt Rand::next() {
-    LongInt xnext = xn * a + c;
-    xn = xnext % m;
-    return xn;
-}
+LongInt LongInt::power(const LongInt& a, const LongInt& b, const LongInt& mod) const {
+    LongInt result("1");
+    LongInt base = a % mod;
+    LongInt exponent = b;
 
-Rand::Rand(LongInt seed, LongInt m_) {
-    m = m_;
-    xn = seed;
-}
-
-LongInt LongInt::pow_mod(const LongInt &other, const LongInt& modulus) const { //this ^ other % modulus
-    if (modulus == 1)
-        return 0;
-    LongInt r = 1;
-    LongInt b = *this % modulus;
-    LongInt e = other;
-    while (e > 0){
-        if (e % 2 == 1)
-            r = (r * b) % modulus;
-        e = e / 2;
-        b = (b * b) % modulus;
+    while (exponent > LongInt("0")) {
+        if (exponent % LongInt("2") == LongInt("1"))
+            result = (result * base) % mod;
+        exponent = exponent / LongInt("2");
+        base = (base * base) % mod;
     }
-    return r;
+
+    return result;
 }
 
-bool LongInt::fermat() const {
-    if (*this == 2)
-        return true;
-    if (*this % 2 == 0)
+/*bool LongInt::millerRabinTest(LongInt& n, int iterations) {
+    if (n <= 1 || n == 4)
         return false;
-    bool prime = true;
-    srand(time(0));
-    Rand r(rand(), *this - 1);
-    int k = 4;
-    while (k > 0 && prime){
-        k--;
-        LongInt test = r.next();
-        test = test.pow_mod(*this - 1, *this);
-        if (test != 1)
-            prime = false;
-    }
-    return prime;
-}
-
-bool LongInt::rab_mil() const {
-    if (*this == 2)
+    if (n <= 3)
         return true;
-    if (*this % 2 == 0) {
-        cout << "f";
-        return false;
-    }
-    int r = 0;
-    LongInt d = *this - 1;
+
+    // Find s and d such that n - 1 = 2^s * d
+    LongInt d = n - 1;
+    int s = 0;
     while (d % 2 == 0) {
-        d = d / 2;
-        r++;
+        d = d / LongInt("2");
+        s++;
     }
-    int k = 4;
-    bool prime = true;
-    srand(time(0));
-    Rand rnd(rand(), *this - 1);
-    while(k > 0 && prime) {
-        k--;
-        LongInt a = rnd.next();
-        while (a == 1 || a == 0) {
-            a = rnd.next();
-        }
-        LongInt x = a.pow_mod(d, *this);
-        if (x == 1 || x == *this - 1)
+    for (int i = 0; i < iterations; ++i) {
+        // Choose a random integer a in the range [2, n-2]
+        LongInt a("2");
+         a = 2 + rand() % (n - 3);
+
+        // Compute a^d % n
+        long long x = power(a, d, n);
+
+        // If the result is 1 or n-1, continue to the next iteration
+        if (x == 1 || x == n - 1)
             continue;
-        bool flag = true;
-        for (int i = 0; i < r - 1 && prime && flag; i++) {
-            x = x.pow_mod(2, *this);
-            if (x == *this - 1)
-                flag = false;
+
+        // Repeat squaring to check for the second condition
+        for (int r = 1; r < s; r++) {
+            x = (x * x) % n;
+            if (x == 1)
+                return false; // n is composite
+            if (x == n - 1)
+                break; // continue to the next iteration
         }
-        prime = !flag;
+
+        if (x != n - 1)
+            return false; // n is composite
     }
 
-    return prime;
-}
+    // If all tests pass, n is probably prime
+    return true;
+}*/

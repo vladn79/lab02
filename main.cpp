@@ -35,8 +35,7 @@ int main() {
         std::cout << result.coefficients[i];
     }
     cout << endl;
-    LongInt c("3");
-    cout << "Ferma :" << c.fermat() << endl;
-    cout << "Rab_m :" << c.rab_mil() << endl;
+    cout << "Ferma : " << a.isPrimeFermat(a, 5);
+    
 
 }
