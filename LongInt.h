@@ -43,28 +43,30 @@ public:
     LongInt operator%(const LongInt& other) const;
     LongInt operator%(int n) const;
 
+    LongInt jacobi(LongInt& n, LongInt& k);
+    LongInt power(const LongInt& a, const LongInt& b, const LongInt& mod) const;
+
     static std::string karatsuba_multiply(LongInt num1, LongInt num2);
     static std::string toom_cook_multiply(LongInt num1, LongInt num2);
     static std::string shenhageMultiply(LongInt num1, LongInt num2);
     static LongInt schonhageStrassenMultiply(const LongInt& operandA, const LongInt& operandB);
+    static void fft(std::vector<std::complex<double>>& a, bool invert);
+
+    
     int toInt() const;
 
-    LongInt power(const LongInt& a, const LongInt& b, const LongInt& mod) const;
     bool isPrimeFermat(LongInt n, int iterations);
     bool millerRabinTest(LongInt& n, int iterations);
     bool Solovey_Str(LongInt& n, int k);
-    LongInt jacobi(LongInt& n, LongInt& k);
 
 
 
     friend std::ostream& operator<<(std::ostream& out, LongInt num);
     friend std::istream& operator>>(std::istream& in, LongInt& num);
 
-    static void fft(std::vector<std::complex<double>>& a, bool invert);
 
 
     auto rbegin() const;
-
     auto rend() const;
 
     void removeLeadingZero();

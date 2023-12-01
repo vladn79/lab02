@@ -19,7 +19,24 @@ int main() {
     cin >> a;
     cin >> b;
 
-    cout << "karatsuba = " << LongInt::karatsuba_multiply(a, b) << endl;
+    cout << "Arithmetic operations:" << endl;
+    cout << "a + b = " << (a + b).value << endl;
+    cout << "a - b = " << (a - b).value << endl;
+    cout << "a * b = " << (a * b).value << endl;
+    cout << "a % b = " << (a % b).value << endl;
+    cout << "a / b = " << (a / b).value << endl;
+
+    cout << "Logical operations:" << endl;
+    cout << "a > b? : " << (a > b)<< endl;
+    cout << "a < b? : " << (a < b)<< endl;
+    cout << "a == b? : " << (a == b) << endl;
+    cout << "a != b? : " << (a != b)<< endl;
+    cout << "a <= b? : " << (a <= b) << endl;
+    cout << "a >= b? : " << (a >= b) << endl;
+
+
+    cout << "Mult alg:" << endl;
+    cout << "Karatsuba = " << LongInt::karatsuba_multiply(a, b) << endl;
     cout << "Toom_Cook = " << LongInt::toom_cook_multiply(a, b) << endl;
     cout << "modular m = " << LongInt::shenhageMultiply(a, b) << endl;
     
@@ -35,8 +52,9 @@ int main() {
         std::cout << result.coefficients[i];
     }
     cout << endl;
+    cout << "Primary tests" << endl;
 
-    
+
     cout << "Ferma : " << a.isPrimeFermat(a, 5) << endl;
     cout << "MillerRabin : " << a.millerRabinTest(a, 5) << endl;
     cout<< "Solovey S : " << a.Solovey_Str(a, 5);

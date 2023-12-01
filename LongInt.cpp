@@ -4,7 +4,7 @@
 #include <complex>
 #include <cstdlib> 
 #include <ctime>
-using namespace std;
+
 int base = 10;
 
 LongInt::LongInt(std::string x) {
@@ -51,26 +51,26 @@ long LongInt::alignStrings(const std::string& num1, const std::string& num2) {
 std::string LongInt::add(std::string num1, std::string num2) {
            int spare = 0;
         long n = alignStrings(num1, num2);
-        string res;
+        std::string res;
         int sum;
 
         for (int i = n - 1; i >= 0; i--) {
             sum = (num1[i] - '0') + (num2[i] - '0') + spare;
-            res.insert(0, to_string(sum % base));
+            res.insert(0, std::to_string(sum % base));
             spare = sum / base;
         }
 
         if (spare) {
-            res.insert(0, to_string(spare));
+            res.insert(0, std::to_string(spare));
         }
 
-        return res.erase(0, min(res.find_first_not_of('0'), res.size() - 1));
+        return res.erase(0, std::min(res.find_first_not_of('0'), res.size() - 1));
 }
 
 std::string LongInt::sub(std::string num1, std::string num2) {
         int diff;
         long n = alignStrings(num1, num2);
-        string x, y, res;
+        std::string x, y, res;
 
         if (num1 > num2) {
             x = num1;
@@ -85,7 +85,7 @@ std::string LongInt::sub(std::string num1, std::string num2) {
             diff = (x[i] - '0') - (y[i] - '0');
 
             if (diff >= 0)
-                res.insert(0, to_string(diff));
+                res.insert(0, std::to_string(diff));
 
             else {
                 int prev = i - 1;
@@ -97,10 +97,10 @@ std::string LongInt::sub(std::string num1, std::string num2) {
                     else
                         prev--;
                 }
-                res.insert(0, to_string(diff + base));
+                res.insert(0, std::to_string(diff + base));
             }
         }
-        return res.erase(0, min(res.find_first_not_of('0'), res.size() - 1));
+        return res.erase(0, std::min(res.find_first_not_of('0'), res.size() - 1));
 }
 
 std::string LongInt::multiplyByPowerOf10(std::string& num, long times) {
@@ -215,7 +215,7 @@ LongInt LongInt::operator/(int n) const {
         quotient.push_back(static_cast<char>(currentDigit + '0'));
     }
 
-    quotient.erase(0, min(quotient.find_first_not_of('0'), quotient.size() - 1));
+    quotient.erase(0, std::min(quotient.find_first_not_of('0'), quotient.size() - 1));
     result.value = quotient.empty() ? "0" : quotient;
 
     return result;
@@ -231,8 +231,8 @@ LongInt LongInt::operator/(const LongInt& other) const {
     LongInt divisor(other.value);
 
     bool negativeResult = (dividend.value[0] == '-' && divisor.value[0] != '-') || (dividend.value[0] != '-' && divisor.value[0] == '-');
-    dividend.value.erase(0, min(dividend.value.find_first_not_of('-'), dividend.value.size() - 1));
-    divisor.value.erase(0, min(divisor.value.find_first_not_of('-'), divisor.value.size() - 1));
+    dividend.value.erase(0, std::min(dividend.value.find_first_not_of('-'), dividend.value.size() - 1));
+    divisor.value.erase(0, std::min(divisor.value.find_first_not_of('-'), divisor.value.size() - 1));
 
     LongInt currentDividend;
     for (size_t i = 0; i < dividend.value.size(); ++i) {
@@ -262,8 +262,8 @@ LongInt LongInt::operator%(const LongInt& other) const {
     LongInt divisor(other.value);
 
     bool negativeResult = (dividend.value[0] == '-' && divisor.value[0] != '-') || (dividend.value[0] != '-' && divisor.value[0] == '-');
-    dividend.value.erase(0, min(dividend.value.find_first_not_of('-'), dividend.value.size() - 1));
-    divisor.value.erase(0, min(divisor.value.find_first_not_of('-'), divisor.value.size() - 1));
+    dividend.value.erase(0, std::min(dividend.value.find_first_not_of('-'), dividend.value.size() - 1));
+    divisor.value.erase(0, std::min(divisor.value.find_first_not_of('-'), divisor.value.size() - 1));
 
     LongInt currentDividend;
     for (size_t i = 0; i < dividend.value.size(); ++i) {
@@ -320,7 +320,7 @@ std::string LongInt::karatsuba_multiply(LongInt num1, LongInt num2) {
         long n = LongInt::alignStrings(num1.value, num2.value);
 
         if (n == 1) {
-            return to_string((num1.value[0] - '0') * (num2.value[0] - '0'));
+            return std::to_string((num1.value[0] - '0') * (num2.value[0] - '0'));
         }
 
         a0 = num1.value.substr(0, n / 2);
@@ -340,7 +340,7 @@ std::string LongInt::karatsuba_multiply(LongInt num1, LongInt num2) {
 
         res = m1 + m2 + Z1;
 
-        return res.value.erase(0, min(res.value.find_first_not_of('0'), res.value.size() - 1));
+        return res.value.erase(0, std::min(res.value.find_first_not_of('0'), res.value.size() - 1));
 }
 
 std::string LongInt::toom_cook_multiply(LongInt num1, LongInt num2) {
@@ -349,7 +349,7 @@ std::string LongInt::toom_cook_multiply(LongInt num1, LongInt num2) {
         long l = LongInt::alignStrings(num1.value, num2.value);
 
         if (l == 1) {
-            return to_string((num1.value[0] - '0') * (num2.value[0] - '0'));
+            return std::to_string((num1.value[0] - '0') * (num2.value[0] - '0'));
         }
 
         if (l % 3) {
@@ -386,10 +386,10 @@ std::string LongInt::toom_cook_multiply(LongInt num1, LongInt num2) {
 
         res = m0 + m1 + m2 + m01 + m02 + m12;
 
-        return res.value.erase(0, min(res.value.find_first_not_of('0'), res.value.size() - 1));
+        return res.value.erase(0, std::min(res.value.find_first_not_of('0'), res.value.size() - 1));
 }
 std::string LongInt::shenhageMultiply(LongInt num1, LongInt num2) {
-    LongInt result = LongInt(karatsuba_multiply(num1, num2)) % LongInt("12312312312312312312312312313231231231231231231231231231231231231231231231231231231231231231231231123123");
+    LongInt result = LongInt(karatsuba_multiply(num1, num2)) % LongInt("123123123123123123123123123132312312312312312312312312312312312312312312312312312312312312312312311231239999999999999999999999999999999999999999999999999");
     return result.value;
 }
 
