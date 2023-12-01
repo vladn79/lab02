@@ -6,8 +6,8 @@
 using namespace std;
 
 
-std::vector<int> stringToVector(const LongInt& inputNum) {
-    std::vector<int> result;
+vector<int> stringToVector(const LongInt& inputNum) {
+    vector<int> result;
     for (auto it = inputNum.rbegin(); it != inputNum.rend(); ++it) {
         result.push_back(*it - '0'); 
     }
@@ -20,11 +20,11 @@ int main() {
     cin >> b;
 
     cout << "karatsuba = " << LongInt::karatsuba_multiply(a, b) << endl;
-    cout << "toom_cook = " << LongInt::toom_cook_multiply(a, b) << endl;
-    cout << "modular m = " << LongInt::shenhageMultiply(a, b) << endl;// таке собі...
+    cout << "Toom_Cook = " << LongInt::toom_cook_multiply(a, b) << endl;
+    cout << "modular m = " << LongInt::shenhageMultiply(a, b) << endl;
     
-    std::vector<int> coeffsA = stringToVector(a);
-    std::vector<int> coeffsB = stringToVector(b); 
+    vector<int> coeffsA = stringToVector(a);
+    vector<int> coeffsB = stringToVector(b); 
 
     LongInt numA(coeffsA);
     LongInt numB(coeffsB);
@@ -35,7 +35,9 @@ int main() {
         std::cout << result.coefficients[i];
     }
     cout << endl;
-    cout << "Ferma : " << a.isPrimeFermat(a, 5);
-    
 
+    
+    cout << "Ferma : " << a.isPrimeFermat(a, 5) << endl;
+    cout << "MillerRabin : " << a.millerRabinTest(a, 5) << endl;
+    cout<< "Solovey S : " << a.Solovey_Str(a, 5);
 }

@@ -521,13 +521,11 @@ LongInt LongInt::power(const LongInt& a, const LongInt& b, const LongInt& mod) c
     return result;
 }
 
-/*bool LongInt::millerRabinTest(LongInt& n, int iterations) {
+bool LongInt::millerRabinTest(LongInt& n, int iterations) {
     if (n <= 1 || n == 4)
         return false;
     if (n <= 3)
         return true;
-
-    // Find s and d such that n - 1 = 2^s * d
     LongInt d = n - 1;
     int s = 0;
     while (d % 2 == 0) {
@@ -535,30 +533,63 @@ LongInt LongInt::power(const LongInt& a, const LongInt& b, const LongInt& mod) c
         s++;
     }
     for (int i = 0; i < iterations; ++i) {
-        // Choose a random integer a in the range [2, n-2]
         LongInt a("2");
-         a = 2 + rand() % (n - 3);
-
-        // Compute a^d % n
-        long long x = power(a, d, n);
-
-        // If the result is 1 or n-1, continue to the next iteration
+         a = LongInt("2") +LongInt(rand()) % (n - 3);
+        LongInt x = power(a, d, n);
         if (x == 1 || x == n - 1)
             continue;
-
-        // Repeat squaring to check for the second condition
         for (int r = 1; r < s; r++) {
             x = (x * x) % n;
             if (x == 1)
-                return false; // n is composite
+                return false; 
             if (x == n - 1)
-                break; // continue to the next iteration
+                break; 
         }
 
         if (x != n - 1)
-            return false; // n is composite
+            return false; 
     }
-
-    // If all tests pass, n is probably prime
     return true;
-}*/
+}
+
+LongInt LongInt::jacobi(LongInt& n, LongInt& k) {
+    n  = n % k;
+    int t = 1;
+
+    while (n != 0) {
+        while (n % 2 == 0) {
+            n = n / 2;
+            LongInt r = k % LongInt("8");
+
+            if (r == 3 || r == 5) {
+                t = -t;
+            }
+        }
+        std::swap(n, k);
+        if (n % 4 == 3 && k % 4 == 3) {
+            t = -t;
+        }
+        n = n % k;
+    }
+    if (k == 1) {
+        return t;
+    } else {
+        return 0;
+    }
+}
+
+bool LongInt::Solovey_Str(LongInt& n, int k) {
+    LongInt a, p, r;
+    for (int i = 0; i < k; ++i) {
+        a = LongInt(rand()) % (n - 2) + LongInt("2");
+        p = (n - 1) / 2;
+        r = power(a, p, n);
+
+        LongInt j = jacobi(a, n);
+
+        if (r != j % n && (r + n) % n != j % n) {
+            return false;
+        }
+    }
+    return true;
+}

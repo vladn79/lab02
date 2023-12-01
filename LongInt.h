@@ -51,7 +51,10 @@ public:
 
     LongInt power(const LongInt& a, const LongInt& b, const LongInt& mod) const;
     bool isPrimeFermat(LongInt n, int iterations);
-    bool rab_mil() const;
+    bool millerRabinTest(LongInt& n, int iterations);
+    bool Solovey_Str(LongInt& n, int k);
+    LongInt jacobi(LongInt& n, LongInt& k);
+
 
 
     friend std::ostream& operator<<(std::ostream& out, LongInt num);
