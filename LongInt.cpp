@@ -383,9 +383,8 @@ LongInt LongInt::schonhageStrassenMultiply(const LongInt& operandA, const LongIn
         resultCoefficients[i + 1] += resultCoefficients[i] / 10;
         resultCoefficients[i] %= 10;
     }
-     LongInt res = LongInt(resultCoefficients);
-    res.trim();
-    return res;
+    
+    return LongInt(resultCoefficients);
 }
 
 

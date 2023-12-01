@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <complex>
+#include <algorithm>
 class LongInt {
 public:
     int Size = 1; 
@@ -56,14 +57,12 @@ public:
         return value.rend();
     }
 
-    void trim() {
-    int n = value.find_first_not_of('0');
-    if (n != std::string::npos){
-        value = value.substr(n);
-        Size = value.size();
-    } else{
-        value = "0";
-        Size = 1;
+ void removeLeadingZero() {
+        auto nonZeroPos = std::find_if_not(coefficients.rbegin(), coefficients.rend(), [](int digit) {
+            return digit == 0;
+        });
+        coefficients.erase(nonZeroPos.base(), coefficients.end());  
     }
-}
+
+
 };

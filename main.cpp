@@ -2,6 +2,7 @@
 #include "LongInt.h"
 #include "LongInt.cpp"
 #include <vector>
+
 using namespace std;
 
 
@@ -29,6 +30,7 @@ int main() {
     LongInt numB(coeffsB);
     cout << "Schonhage = ";
     LongInt result = LongInt::schonhageStrassenMultiply(numA, numB);
+    result.removeLeadingZero();
     for (int i = result.coefficients.size() - 1; i >= 0; --i) {
         std::cout << result.coefficients[i];
     }
